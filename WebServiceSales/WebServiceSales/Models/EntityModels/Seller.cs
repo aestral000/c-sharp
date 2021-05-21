@@ -41,7 +41,7 @@ namespace WebServiceSales.Models.EntityModels {
 
         public double TotalSales(DateTime initial, DateTime final) {
             if(initial != null && final != null) {
-
+                return Sales.Where(sales => sales.Date >= initial && sales.Date <= final).Sum(sales => sales.Amount);
             }
 
             return 0;
