@@ -11,6 +11,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using WebServiceSales.Data;
+using WebServiceSales.Views.Sellers;
+using WebServiceSales.Models.Services;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 namespace WebServiceSales {
     public class Startup {
@@ -33,12 +37,28 @@ namespace WebServiceSales {
 
             services.AddDbContext<WebServiceSalesContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("WebServiceSalesContext")));
+
+            services.AddScoped<SeedingService>();
+            services.AddScoped<SellerService>();
+            services.AddScoped<DepartmentService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env) {
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, SeedingService seeding) {
+            CultureInfo cultureInfoUSA = new CultureInfo("en-US");
+            RequestLocalizationOptions requestLocalizationOptions = new RequestLocalizationOptions {
+                DefaultRequestCulture = new RequestCulture(cultureInfoUSA),
+                SupportedCultures = new List<CultureInfo> { cultureInfoUSA },
+                SupportedUICultures = new List<CultureInfo> { cultureInfoUSA }
+
+            };
+
+            app.UseRequestLocalization(requestLocalizationOptions);
+
             if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
+                //seeding.Seed(); Desabilitando o seed, pois o sql server não libera a inserção direta de foreign key
+                //INSERT_IDENTITY sem estar setado para ON
             }
             else {
                 app.UseExceptionHandler("/Home/Error");

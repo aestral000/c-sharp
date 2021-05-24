@@ -50,7 +50,7 @@ namespace WebServiceSales.Migrations
 
                     b.HasIndex("SellerId");
 
-                    b.ToTable("SalesRecords");
+                    b.ToTable("salesRecord");
                 });
 
             modelBuilder.Entity("WebServiceSales.Models.EntityModels.Seller", b =>
@@ -63,7 +63,7 @@ namespace WebServiceSales.Migrations
 
                     b.Property<DateTime>("BirthDate");
 
-                    b.Property<int?>("DepartmentId");
+                    b.Property<int>("DepartmentId");
 
                     b.Property<string>("Email");
 
@@ -87,7 +87,8 @@ namespace WebServiceSales.Migrations
                 {
                     b.HasOne("WebServiceSales.Models.EntityModels.Department", "Department")
                         .WithMany("Sellers")
-                        .HasForeignKey("DepartmentId");
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

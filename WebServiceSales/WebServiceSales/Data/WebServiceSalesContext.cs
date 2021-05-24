@@ -16,9 +16,7 @@ namespace WebServiceSales.Data
 
         public DbSet<Department> Department { get; set; }
         public DbSet<Seller> Seller { get; set; }
-
-        public DbSet<SalesRecord> SalesRecords { get; set; }
-
+        public DbSet<SalesRecord> salesRecord{ get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
             optionsBuilder.UseSqlServer("Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=WebSales;Data Source=NOTE0050");
         }
