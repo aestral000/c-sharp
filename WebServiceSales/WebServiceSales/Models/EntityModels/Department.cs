@@ -22,10 +22,16 @@ namespace WebServiceSales.Models.EntityModels {
 
         public void AddSeller(Seller seller) {
 
+            if(seller != null) {
+                Sellers.Add(seller);
+            }
+
         }
 
         public double TotalSales(DateTime initial, DateTime final) {
-
+            if(initial != null && final != null) {
+               return Sellers.Sum(seller => seller.TotalSales(initial, final));
+            }
             return 0;
         }
 
