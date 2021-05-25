@@ -13,45 +13,59 @@ namespace WebServiceSales.Views.Sellers {
         private readonly WebServiceSalesContext _context;
 
         public SellerService(WebServiceSalesContext context) {
+
             _context = context;
         }
 
-        public List<Seller> FindAll() {
-            return _context.Seller.ToList();
+        public async Task<List<Seller>> FindAllAsync() {
+
+            return await _context.Seller.ToListAsync();
         }
 
-        public void Insert(Seller seller) {
+        public async Task InsertAsync(Seller seller) {
+
             if(seller != null){
                 _context.Add(seller);
 
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
 
-        public Seller FindById(int id) {
+        public async Task<Seller> FindByIdAsync(int id) {
 
-            return _context.Seller.Include(seller => seller.Department).FirstOrDefault(seller => seller.Id == id);
+            return await _context.Seller.Include(seller => seller.Department).FirstOrDefaultAsync(seller => seller.Id == id);
         }
 
-        public void Remove(int id) {
-            Seller seller = FindById(id);
+        public async Task RemoveAsync(int id) {
 
-            _context.Seller.Remove(seller);
+            try {
 
-            _context.SaveChanges();
+                Seller seller = await FindByIdAsync(id);
+
+                _context.Seller.Remove(seller);
+
+                await _context.SaveChangesAsync();
+            }catch(DbUpdateException e) {
+
+                throw new IntegrityException(e.Message);
+            }
+            
         }
 
-        public void Update(Seller seller) { 
-            if(_context.Seller.Any(s => s.Id == seller.Id)){
+        public async Task UpdateAsync(Seller seller) {
+
+            bool hasAny = await _context.Seller.AnyAsync(s => s.Id == seller.Id);
+            if (hasAny){
+
                 try { 
+
                 _context.Update(seller);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 }catch(DbUpdateConcurrencyException e) {
+
                     throw new DbConcurrencyException(e.Message);
                 }
-                finally {
-
-                }
+            
             }
 
             throw new NotFoundException("ID NOT FOUND");

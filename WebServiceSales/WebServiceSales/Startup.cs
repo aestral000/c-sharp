@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Localization;
 namespace WebServiceSales {
     public class Startup {
         public Startup(IConfiguration configuration) {
+
             Configuration = configuration;
         }
 
@@ -26,7 +27,9 @@ namespace WebServiceSales {
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) {
+
             services.Configure<CookiePolicyOptions>(options => {
+
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
@@ -41,12 +44,15 @@ namespace WebServiceSales {
             services.AddScoped<SeedingService>();
             services.AddScoped<SellerService>();
             services.AddScoped<DepartmentService>();
+            services.AddScoped<SalesRecordService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, SeedingService seeding) {
+
             CultureInfo cultureInfoUSA = new CultureInfo("en-US");
             RequestLocalizationOptions requestLocalizationOptions = new RequestLocalizationOptions {
+
                 DefaultRequestCulture = new RequestCulture(cultureInfoUSA),
                 SupportedCultures = new List<CultureInfo> { cultureInfoUSA },
                 SupportedUICultures = new List<CultureInfo> { cultureInfoUSA }
@@ -56,11 +62,13 @@ namespace WebServiceSales {
             app.UseRequestLocalization(requestLocalizationOptions);
 
             if (env.IsDevelopment()) {
+
                 app.UseDeveloperExceptionPage();
                 //seeding.Seed(); Desabilitando o seed, pois o sql server não libera a inserção direta de foreign key
                 //INSERT_IDENTITY sem estar setado para ON
             }
             else {
+
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
@@ -70,6 +78,7 @@ namespace WebServiceSales {
             app.UseCookiePolicy();
 
             app.UseMvc(routes => {
+
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");

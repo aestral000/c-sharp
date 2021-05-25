@@ -36,6 +36,7 @@ namespace WebServiceSales.Models.EntityModels {
         public int DepartmentId { get; set; }
         public ICollection<SalesRecord> Sales { get; set; } = new List<SalesRecord>();
         public Seller(int id, string name, string email, DateTime birthDate, double baseSalary, Department department) {
+
             Id = id;
             Name = name;
             Email = email;
@@ -45,24 +46,31 @@ namespace WebServiceSales.Models.EntityModels {
         }
 
         public Seller() {
+
         }
 
 
         public void AddSales(SalesRecord sales) {
+
             if(sales != null) {
+
                 Sales.Add(sales);
             }
 
         }
 
         public void RemoveSales(SalesRecord sales) {
+
             if(sales != null) {
+
                 Sales.Remove(sales);
             }
         }
 
         public double TotalSales(DateTime initial, DateTime final) {
+
             if(initial != null && final != null) {
+
                 return Sales.Where(sales => sales.Date >= initial && sales.Date <= final).Sum(sales => sales.Amount);
             }
 
